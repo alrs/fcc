@@ -1,0 +1,3 @@
+*.swp
+artifacts/*.zip
+artifacts/*.db
