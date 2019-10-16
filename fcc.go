@@ -1,21 +1,25 @@
 package fcc
 
+import (
+	"time"
+)
+
 type License struct {
-	LicenseID          string
+	LicenseID          uint32
 	SourceSystem       string
 	Callsign           string
-	FacilityID         string
-	FRN                string
+	FacilityID         *uint32
+	FRN                *uint32
 	LicName            string
 	CommonName         string
 	RadioServiceCode   string
 	RadioServiceDesc   string
 	RollupCategoryCode string
 	RollupCategoryDesc string
-	GrantDate          string
-	ExpiredDate        string
-	CancellationDate   string
-	LastActionDate     string
+	GrantDate          *time.Time
+	ExpiredDate        *time.Time
+	CancellationDate   *time.Time
+	LastActionDate     *time.Time
 	LicStatusCode      string
 	LicStatusDesc      string
 	RollupStatusCode   string
