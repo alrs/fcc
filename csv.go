@@ -1,11 +1,41 @@
 package fcc
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const timeFormat = "01/02/2006 15:04:05"
+
+type ErrZip struct {
+	badValue string
+}
+
+func (e *ErrZip) Error() string {
+	return fmt.Sprintf("%s is a bad ZIP value", e.badValue)
+}
+
+func (l *License) Minimal() MinimalLicense {
+	var zipP *uint32
+	if l.LicZipCode != "" {
+		zip, err := zipFix(l.LicZipCode)
+		if err == nil {
+			// ^^ only set the pointer if the zip code
+			// makes it through zipFix unscathed.
+			zipP = &zip
+		}
+	}
+	return MinimalLicense{
+		Callsign: l.Callsign,
+		Name:     l.LicName,
+		Address:  l.LicAddress,
+		City:     l.LicCity,
+		State:    l.LicState,
+		ZIP:      zipP,
+	}
+}
 
 func ParseLicense(line []string) (*License, error) {
 	var err error
@@ -91,9 +121,27 @@ func ParseLicense(line []string) (*License, error) {
 	lic.LicCity = line[24]
 	lic.LicState = line[25]
 	lic.LicZipCode = line[26]
-	lic.LicAttentionLine = line[27]
 
 	return &lic, nil
+}
+
+func zipFix(z string) (uint32, error) {
+	var err error
+	zips := strings.SplitN(z, "-", 2)
+	if len(zips[0]) > 5 {
+		err = &ErrZip{
+			badValue: z,
+		}
+		return 0, err
+	}
+	zipI, err := strconv.Atoi(zips[0])
+	if err != nil {
+		err = &ErrZip{
+			badValue: z,
+		}
+		return 0, err
+	}
+	return uint32(zipI), nil
 }
 
 func parseTime(ts string) (time.Time, error) {

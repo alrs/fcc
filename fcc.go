@@ -4,6 +4,15 @@ import (
 	"time"
 )
 
+type MinimalLicense struct {
+	Callsign string
+	Name     string
+	Address  string
+	City     string
+	State    string
+	ZIP      *uint32
+}
+
 type License struct {
 	LicenseID          uint32
 	SourceSystem       string
@@ -32,7 +41,7 @@ type License struct {
 	LicCity            string
 	LicState           string
 	LicZipCode         string
-	LicAttentionLine   string
+	// LicAttentionLine   string
 	//	ContactCompany       string
 	//	ContactName          string
 	//	ContactTitle         string
