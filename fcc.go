@@ -4,13 +4,15 @@ import (
 	"time"
 )
 
+const Sep = "\u001e"
+
 type MinimalLicense struct {
 	Callsign string
 	Name     string
 	Address  string
 	City     string
 	State    string
-	ZIP      *uint32
+	ZIP      string
 }
 
 type License struct {
