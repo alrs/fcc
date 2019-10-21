@@ -1,4 +1,4 @@
-default: help
+default: fcc
 
 DUMPFILE := artifacts/fcc-license-view-data-csv-format.zip
 BOLTDB := artifacts/fcc.db
@@ -26,11 +26,13 @@ clean:
 	rm -rf artifacts/*
 	rm -rf bin/*
 
-$(VARDIR):
-	mkdir -p $@
-
 .PHONY: download
 download: $(DUMPFILE)
+
+.PHONY: install
+install: fcc $(VARDIR)
+	cp $(FCC) /usr/local/bin/fccdb
+	cp $(BOLTDB) $(VARDIR)
 
 $(DUMPFILE):
 	cd artifacts && wget http://data.fcc.gov/download/license-view/fcc-license-view-data-csv-format.zip
@@ -41,8 +43,8 @@ $(BOLTDB): $(DUMPFILE) | $(FCC2BOLT)
 $(FCC2BOLT):
 	go build -o $@ cmd/fcc2bolt/main.go
 
-.PHONY: install
-install: fcc $(VARDIR)
-	cp $(FCC) /usr/local/bin/fcc
-	cp $(BOLTDB) $(VARDIR)
- 
+$(FCC):
+	go build -o $@ cmd/fccdb/main.go
+
+$(VARDIR):
+	mkdir -p $@
