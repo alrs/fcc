@@ -1,3 +1,4 @@
 *.swp
 artifacts/*.zip
 artifacts/*.db
+bin/*
