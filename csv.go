@@ -23,14 +23,17 @@ import (
 )
 
 const timeFormat = "01/02/2006 15:04:05"
+const sep = "\u001e"
 
-type ErrZip struct {
-	badValue string
-}
+//type ErrZip struct {
+//	badValue string
+//}
 
+// ReadRecord reads a database record from boltdb and returns
+// a MinimalLicense.
 func ReadRecord(record []byte) MinimalLicense {
 	var ml MinimalLicense
-	split := strings.Split(string(record), Sep)
+	split := strings.Split(string(record), sep)
 	ml.Callsign = split[0]
 	ml.Name = split[1]
 	ml.Address = split[2]
@@ -40,6 +43,7 @@ func ReadRecord(record []byte) MinimalLicense {
 	return ml
 }
 
+// Minimal returns a MinimalLicense.
 func (l *License) Minimal() MinimalLicense {
 	return MinimalLicense{
 		Callsign: l.Callsign,
@@ -51,6 +55,7 @@ func (l *License) Minimal() MinimalLicense {
 	}
 }
 
+// DiskFormat converts a MinimalLicense to its on-disk format.
 func (m *MinimalLicense) DiskFormat() []byte {
 	join := strings.Join([]string{
 		m.Callsign,
@@ -58,10 +63,12 @@ func (m *MinimalLicense) DiskFormat() []byte {
 		m.Address,
 		m.City,
 		m.State,
-		m.ZIP}, Sep)
+		m.ZIP}, sep)
 	return []byte(join)
 }
 
+// ParseLicense takes a license CSV parsed into a string and generates
+// an *fcc.License{}.
 func ParseLicense(line []string) (*License, error) {
 	var err error
 	var gd, ed, cd, lad time.Time
