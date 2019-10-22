@@ -23,8 +23,7 @@ ingest: $(BOLTDB)
 
 .PHONY: clean
 clean:
-	rm -rf artifacts/*
-	rm -rf bin/*
+	rm $(DUMPFILE) $(BOLTDB) $(FCC2BOLT) $(FCC)
 
 .PHONY: download
 download: $(DUMPFILE)

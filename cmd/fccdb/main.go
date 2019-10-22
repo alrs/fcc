@@ -37,12 +37,6 @@ func main() {
 
 	callsign := strings.ToUpper(flag.Arg(0))
 
-	if callsign == "" {
-		fmt.Printf("\nfccdb <CALLSIGN>\nprints the address to stdout\n\n")
-		flag.Usage()
-		os.Exit(2)
-	}
-
 	if license {
 		fmt.Print(
 			`
@@ -84,6 +78,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if metadata {
 		printMetadata(tx)
 		os.Exit(0)
+	}
+
+	if callsign == "" {
+		fmt.Printf("\nfccdb <CALLSIGN>\nprints the address to stdout\n\n")
+		flag.Usage()
+		os.Exit(2)
 	}
 
 	b := tx.Bucket([]byte("licenses"))

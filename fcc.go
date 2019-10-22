@@ -23,12 +23,11 @@ import (
 // MinimalLicense is a struct that represents the subset of license
 // data stored to database for fast lookups.
 type MinimalLicense struct {
-	Callsign string
-	Name     string
-	Address  string
-	City     string
-	State    string
-	ZIP      string
+	Name    string
+	Address string
+	City    string
+	State   string
+	ZIP     string
 }
 
 // License is a struct representing fields of the FCC license database

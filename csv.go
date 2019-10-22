@@ -25,40 +25,33 @@ import (
 const timeFormat = "01/02/2006 15:04:05"
 const sep = "\u001e"
 
-//type ErrZip struct {
-//	badValue string
-//}
-
 // ReadRecord reads a database record from boltdb and returns
 // a MinimalLicense.
 func ReadRecord(record []byte) MinimalLicense {
 	var ml MinimalLicense
 	split := strings.Split(string(record), sep)
-	ml.Callsign = split[0]
-	ml.Name = split[1]
-	ml.Address = split[2]
-	ml.City = split[3]
-	ml.State = split[4]
-	ml.ZIP = split[5]
+	ml.Name = split[0]
+	ml.Address = split[1]
+	ml.City = split[2]
+	ml.State = split[3]
+	ml.ZIP = split[4]
 	return ml
 }
 
 // Minimal returns a MinimalLicense.
 func (l *License) Minimal() MinimalLicense {
 	return MinimalLicense{
-		Callsign: l.Callsign,
-		Name:     l.LicName,
-		Address:  l.LicAddress,
-		City:     l.LicCity,
-		State:    l.LicState,
-		ZIP:      l.LicZipCode,
+		Name:    l.LicName,
+		Address: l.LicAddress,
+		City:    l.LicCity,
+		State:   l.LicState,
+		ZIP:     l.LicZipCode,
 	}
 }
 
 // DiskFormat converts a MinimalLicense to its on-disk format.
 func (m *MinimalLicense) DiskFormat() []byte {
 	join := strings.Join([]string{
-		m.Callsign,
 		m.Name,
 		m.Address,
 		m.City,
