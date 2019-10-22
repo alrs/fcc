@@ -116,14 +116,12 @@ func printMetadata(path string, tx *bolt.Tx) {
 		fmt.Printf("%s:\t%s\n", string(k), string(v))
 		return nil
 	})
-	return
 }
 
 func printRecord(call string, r fcc.MinimalLicense) {
 	fmt.Printf("\n%s\t%s\n", call, r.Name)
 	fmt.Printf("\t%s\n", r.Address)
 	fmt.Printf("\t%s, %s %s\n\n", r.City, r.State, r.ZIP)
-	return
 }
 
 func pickPath() (string, error) {

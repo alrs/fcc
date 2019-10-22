@@ -1,20 +1,20 @@
-default: fcc
+default: all
 
 DUMPFILE := artifacts/fcc-license-view-data-csv-format.zip
 BOLTDB := artifacts/fcc.db
 FCC2BOLT := bin/fcc2bolt
-FCC := bin/fccdb
-VARDIR := /var/local/fccdb
+FCCDB := bin/fccdb
+DBDIR := /usr/share/fccdb
 
-.PHONY: fcc
-fcc: $(FCC) $(BOLTDB)
+.PHONY: all
+all: $(FCCDB) $(BOLTDB)
 
 .PHONY: help
 help:
 	@echo
+	@echo "all: build binaries and include ingest"
 	@echo "ingest: ingest FCC database into local database format"
-	@echo "fcc: build binaries and include ingest"
-	@echo "install: copy db file to $(VARDIR) and fcc binary to /usr/local/bin"
+	@echo "install: copy db file to $(DBDIR) and fcc binary to /usr/local/bin"
 	@echo "download: download FCC dataset"
 	@echo
 
@@ -23,15 +23,15 @@ ingest: $(BOLTDB)
 
 .PHONY: clean
 clean:
-	rm $(DUMPFILE) $(BOLTDB) $(FCC2BOLT) $(FCC)
+	rm $(DUMPFILE) $(BOLTDB) $(FCC2BOLT) $(FCCDB)
 
 .PHONY: download
 download: $(DUMPFILE)
 
 .PHONY: install
-install: fcc $(VARDIR)
-	cp $(FCC) /usr/local/bin/fccdb
-	cp $(BOLTDB) $(VARDIR)
+install: all $(DBDIR)
+	cp $(FCCDB) /usr/local/bin/fccdb
+	cp $(BOLTDB) $(DBDIR)
 
 $(DUMPFILE):
 	cd artifacts && wget http://data.fcc.gov/download/license-view/fcc-license-view-data-csv-format.zip
@@ -42,8 +42,8 @@ $(BOLTDB): $(DUMPFILE) | $(FCC2BOLT)
 $(FCC2BOLT):
 	go build -o $@ cmd/fcc2bolt/main.go
 
-$(FCC):
+$(FCCDB):
 	go build -o $@ cmd/fccdb/main.go
 
-$(VARDIR):
+$(DBDIR):
 	mkdir -p $@
