@@ -27,10 +27,14 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
+var dbPaths = []string{
+	"/usr/share/fccdb/fcc.db",
+	"./fcc.db",
+}
+
 func main() {
 	var path string
 	var license, metadata bool
-	flag.StringVar(&path, "db", "/var/local/fccdb/fcc.db", "path to database")
 	flag.BoolVar(&license, "l", false, "print license")
 	flag.BoolVar(&metadata, "m", false, "print metadata")
 	flag.Parse()
@@ -59,6 +63,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		os.Exit(0)
 	}
 
+	if os.Getenv("FCCDB") != "" {
+		path = os.Getenv("FCCDB")
+	} else {
+		var err error
+		path, err = pickPath()
+		if err != nil {
+			log.Fatalf("FCCDB unset, %s", err)
+		}
+	}
+
 	options := &bolt.Options{
 		ReadOnly: true,
 	}
@@ -76,7 +90,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	defer tx.Rollback()
 
 	if metadata {
-		printMetadata(tx)
+		printMetadata(path, tx)
 		os.Exit(0)
 	}
 
@@ -95,7 +109,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	printRecord(callsign, record)
 }
 
-func printMetadata(tx *bolt.Tx) {
+func printMetadata(path string, tx *bolt.Tx) {
+	fmt.Printf("using database at path: %s\n\n", path)
 	meta := tx.Bucket([]byte("metadata"))
 	meta.ForEach(func(k, v []byte) error {
 		fmt.Printf("%s:\t%s\n", string(k), string(v))
@@ -109,4 +124,16 @@ func printRecord(call string, r fcc.MinimalLicense) {
 	fmt.Printf("\t%s\n", r.Address)
 	fmt.Printf("\t%s, %s %s\n\n", r.City, r.State, r.ZIP)
 	return
+}
+
+func pickPath() (string, error) {
+	for _, path := range dbPaths {
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			continue
+		}
+		return path, nil
+	}
+	return "", fmt.Errorf("could not find fcc.db in %s",
+		strings.Join(dbPaths, ","))
 }
