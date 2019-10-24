@@ -65,11 +65,9 @@ func (m *MinimalLicense) DiskFormat() []byte {
 func ParseLicense(line []string) (*License, error) {
 	var err error
 	var gd, ed, cd, lad time.Time
-	var lid, frnI, fidI int
-	var frnUi, fidUi uint32
 
 	lic := License{}
-	lid, err = strconv.Atoi(line[0])
+	lid, err := strconv.ParseUint(line[0], 10, 32)
 	if err != nil {
 		return &lic, err
 	}
@@ -79,21 +77,20 @@ func ParseLicense(line []string) (*License, error) {
 
 	lic.Callsign = line[2]
 	if line[3] != "" {
-		fidI, err = strconv.Atoi(line[3])
+		fid, err := strconv.ParseUint(line[3], 10, 32)
 		if err != nil {
 			return &lic, err
 		}
-		fidUi = uint32(fidI)
-		lic.FacilityID = &fidUi
+		fid32 := uint32(fid)
+		lic.FacilityID = &fid32
 	}
 
 	if line[4] != "" {
-		frnI, err = strconv.Atoi(line[4])
+		frn, err := strconv.ParseUint(line[4], 10, 64)
 		if err != nil {
 			return &lic, err
 		}
-		frnUi = uint32(frnI)
-		lic.FRN = &frnUi
+		lic.FRN = &frn
 	}
 
 	lic.LicName = line[5]

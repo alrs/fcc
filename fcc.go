@@ -37,7 +37,7 @@ type License struct {
 	SourceSystem       string
 	Callsign           string
 	FacilityID         *uint32
-	FRN                *uint32
+	FRN                *uint64
 	LicName            string
 	CommonName         string
 	RadioServiceCode   string
