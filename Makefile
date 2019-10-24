@@ -7,16 +7,20 @@ FCCDB := bin/fccdb
 DBDIR := /usr/share/fccdb
 
 .PHONY: all
-all: $(FCCDB) $(BOLTDB)
+all: binaries | ingest
 
 .PHONY: help
 help:
 	@echo
-	@echo "all: build binaries and include ingest"
-	@echo "ingest: ingest FCC database into local database format"
+	@echo "all: build binaries and ingest database (default)"
+	@echo "binaries: build fccdb and fcc2bolt"
+	@echo "ingest: download FCC database and insert relevant records into boltdb"
 	@echo "install: copy db file to $(DBDIR) and fcc binary to /usr/local/bin"
 	@echo "download: download FCC dataset"
 	@echo
+
+.PHONY: binaries
+binaries: $(FCC2BOLT) $(FCCDB)
 
 .PHONY: ingest
 ingest: $(BOLTDB)
