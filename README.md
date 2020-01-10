@@ -19,5 +19,26 @@ this software requires `wget`, `make`, and the `go` toolchain.
 `make` will build the `cmd` binaries, download the FCC dataset, and perform
 the boltdb ingestion.
 
-`sudo make install` will copy `fccdb` to `/usr/local/bin/` and the `fcc.db`
+`sudo make install` will copy `fccdb` and `fccd` to `/usr/local/bin/` and the `fcc.db`
 database to `/usr/share/fccdb`.
+
+## fccd
+
+`fccd` listens on port 8080, and picks up a non-default DB location from the FCCDB 
+environment variable.
+
+Lookups against the `fccd` API can be made in the format:
+`/license/<FCC CALLSIGN>`
+
+From the console:
+`curl http://localhost:8080/license/kj6cbe`
+
+The expected result:
+
+`{
+        "Name": "Lehtonen, Lars A",
+        "Address": "1727 Glendale Blvd",
+        "City": "Los Angeles",
+        "State": "CA",
+        "ZIP": "90026"
+}`
