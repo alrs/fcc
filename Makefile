@@ -3,6 +3,7 @@ default: all
 DUMPFILE := artifacts/fcc-license-view-data-csv-format.zip
 BOLTDB := artifacts/fcc.db
 FCC2BOLT := bin/fcc2bolt
+FCCD := bin/fccd
 FCCDB := bin/fccdb
 DBDIR := /usr/share/fccdb
 
@@ -20,14 +21,14 @@ help:
 	@echo
 
 .PHONY: binaries
-binaries: $(FCC2BOLT) $(FCCDB)
+binaries: $(FCC2BOLT) $(FCCDB) $(FCCD)
 
 .PHONY: ingest
 ingest: $(BOLTDB)
 
 .PHONY: clean
 clean:
-	rm $(DUMPFILE) $(BOLTDB) $(FCC2BOLT) $(FCCDB)
+	rm -f $(DUMPFILE) $(BOLTDB) $(FCC2BOLT) $(FCCDB) $(FCCD)
 
 .PHONY: download
 download: $(DUMPFILE)
@@ -35,6 +36,7 @@ download: $(DUMPFILE)
 .PHONY: install
 install: all $(DBDIR)
 	cp $(FCCDB) /usr/local/bin/fccdb
+	cp $(FCCD) /usr/local/bin/fccd
 	cp $(BOLTDB) $(DBDIR)
 
 $(DUMPFILE):
@@ -48,6 +50,9 @@ $(FCC2BOLT):
 
 $(FCCDB):
 	go build -o $@ cmd/fccdb/main.go
+
+$(FCCD):
+	go build -o $@ cmd/fccd/main.go
 
 $(DBDIR):
 	mkdir -p $@
