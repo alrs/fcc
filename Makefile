@@ -40,7 +40,8 @@ install: all $(DBDIR)
 	cp $(BOLTDB) $(DBDIR)
 
 $(DUMPFILE):
-	cd artifacts && wget -4 http://data.fcc.gov/download/license-view/fcc-license-view-data-csv-format.zip
+	curl -k "https://data.fcc.gov/download/license-view/fcc-license-view-data-csv-format.zip" \
+	> $(DUMPFILE)
 
 $(BOLTDB): $(DUMPFILE) | $(FCC2BOLT)
 	$(FCC2BOLT) -dump $(DUMPFILE) -db $(BOLTDB)
