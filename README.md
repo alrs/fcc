@@ -12,7 +12,7 @@ FCC-issued amateur callsigns.
 
 ## Installation
 The `fcc` package can be used as-is. To download and ingest the FCC database,
-this software requires `wget`, `make`, and the `go` toolchain.
+this software requires `curl`, `make`, and the `go` toolchain.
 
 `make help` provides all options in the Makefile.
 
